@@ -1,0 +1,19 @@
+.menu {
+    padding-top: 50px;
+    height: 100vh;
+    width: 150px;
+    background-color: aqua;
+    border-right: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.menu a {
+    font-size: 20px;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
