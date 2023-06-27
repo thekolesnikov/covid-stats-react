@@ -6,8 +6,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSearchParams, useParams } from 'react-router-dom';
 
-export default function BasicSelect() {
-    const [filter, setFilter] = useState('confirmed');
+type Props = {
+    filter: string;
+    setFilter: (filter: string) => void;
+};
+
+export const BasicSelect = ({ filter, setFilter }: Props) => {
     const [params, setParams] = useSearchParams();
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -30,11 +34,11 @@ export default function BasicSelect() {
                     label="Case"
                     onChange={handleChange}
                 >
-                    <MenuItem value="confirmed">Confirmed</MenuItem>
-                    <MenuItem value="death">Death</MenuItem>
-                    <MenuItem value="recovered">Recovered</MenuItem>
+                    <MenuItem value="confirmed_diff">Confirmed</MenuItem>
+                    <MenuItem value="deaths_diff">Deaths</MenuItem>
+                    <MenuItem value="recovered_diff">Recovered</MenuItem>
                 </Select>
             </FormControl>
         </Box>
     );
-}
+};

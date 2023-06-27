@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/MainLayout/MainLayout';
-import Stats from './pages/Stats/Stats';
-import About from './pages/About/About';
+import StatsPage from './pages/StatsPage/StatsPage';
+import AboutPage from './pages/AboutPage/AboutPage';
 
 import './App.css';
 
@@ -10,8 +10,8 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route element={<MainLayout />}>
-                    <Route index element={<Stats />}></Route>
-                    <Route path="/about" element={<About />}></Route>
+                    <Route index element={<StatsPage />}></Route>
+                    <Route path="/about" element={<AboutPage />}></Route>
                 </Route>
             </Routes>
         </BrowserRouter>
