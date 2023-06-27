@@ -3,9 +3,11 @@ import Navmenu from '../NavMenu/NavMenu';
 
 const MainLayout = () => {
     return (
-        <div className="container">
+        <div className="flex">
             <Navmenu />
-            <Outlet />
+            <main className="container">
+                <Outlet />
+            </main>
         </div>
     );
 };

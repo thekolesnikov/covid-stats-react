@@ -1,5 +1,10 @@
-.container {
+.flex {
     display: flex;
+    gap: 20px;
+}
+
+.container {
+    margin: 50px;
 }
 
 .active {
