@@ -7,9 +7,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { fetchTotalStats } from '../../utils/api';
 import CaseSelect from '../../components/CaseSelect/CaseSelect';
+import { IStatByDate } from '../../types/types';
 
 function Stats() {
-    const [totalStats, setTotalStats] = useState([]);
+    const [totalStats, setTotalStats] = useState<IStatByDate[]>([]);
+    console.log(totalStats);
 
     const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([
         dayjs(''),
@@ -30,15 +32,15 @@ function Stats() {
     };
 
     useEffect(() => {
-        const result = getDatesBetween(
-            new Date(dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : ''),
-            new Date(dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '')
-        );
-        const resultArr = result.map((date) => {
-            const dateFormat = dayjs(date).format('YYYY-MM-DD');
-            return fetchTotalStats(dateFormat);
-        });
-        Promise.all(resultArr).then((res) => res);
+        // const result = getDatesBetween(
+        //     new Date(dateRange[0] ? dateRange[0].format('YYYY-MM-DD') : ''),
+        //     new Date(dateRange[1] ? dateRange[1].format('YYYY-MM-DD') : '')
+        // );
+        // const resultArr = result.map((date) => {
+        //     const dateFormat = dayjs(date).format('YYYY-MM-DD');
+        //     return fetchTotalStats(dateFormat);
+        // });
+        // Promise.all(resultArr).then((res) => res);
     });
 
     return (
@@ -53,6 +55,26 @@ function Stats() {
                                 dataFrom: newValue[0]?.format('YYYY-MM-DD'),
                                 dataTo: newValue[1]?.format('YYYY-MM-DD'),
                             });
+                            const result = getDatesBetween(
+                                new Date(
+                                    newValue[0]
+                                        ? newValue[0].format('YYYY-MM-DD')
+                                        : ''
+                                ),
+                                new Date(
+                                    newValue[1]
+                                        ? newValue[1].format('YYYY-MM-DD')
+                                        : ''
+                                )
+                            );
+                            const resultArr = result.map((date) => {
+                                const dateFormat =
+                                    dayjs(date).format('YYYY-MM-DD');
+                                return fetchTotalStats(dateFormat);
+                            });
+                            Promise.all(resultArr).then((res) =>
+                                setTotalStats(res)
+                            );
                         }
                     }}
                 />
