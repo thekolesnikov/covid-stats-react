@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import { fetchTotalStats } from '../../utils/api';
 import CaseSelect from '../../components/CaseSelect/CaseSelect';
+import { Chart } from '../../components/Chart/Chart';
 import { IStatByDate } from '../../types/types';
 
 function Stats() {
@@ -44,43 +45,46 @@ function Stats() {
     });
 
     return (
-        <div className="flex">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateRangePicker
-                    value={dateRange}
-                    onChange={(newValue) => {
-                        setDateRange(newValue);
-                        if (newValue[0] && newValue[1]) {
-                            setParams({
-                                dataFrom: newValue[0]?.format('YYYY-MM-DD'),
-                                dataTo: newValue[1]?.format('YYYY-MM-DD'),
-                            });
-                            const result = getDatesBetween(
-                                new Date(
-                                    newValue[0]
-                                        ? newValue[0].format('YYYY-MM-DD')
-                                        : ''
-                                ),
-                                new Date(
-                                    newValue[1]
-                                        ? newValue[1].format('YYYY-MM-DD')
-                                        : ''
-                                )
-                            );
-                            const resultArr = result.map((date) => {
-                                const dateFormat =
-                                    dayjs(date).format('YYYY-MM-DD');
-                                return fetchTotalStats(dateFormat);
-                            });
-                            Promise.all(resultArr).then((res) =>
-                                setTotalStats(res)
-                            );
-                        }
-                    }}
-                />
-            </LocalizationProvider>
-            <CaseSelect />
-        </div>
+        <>
+            <div className="flex">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateRangePicker
+                        value={dateRange}
+                        onChange={(newValue) => {
+                            setDateRange(newValue);
+                            if (newValue[0] && newValue[1]) {
+                                setParams({
+                                    dataFrom: newValue[0]?.format('YYYY-MM-DD'),
+                                    dataTo: newValue[1]?.format('YYYY-MM-DD'),
+                                });
+                                const result = getDatesBetween(
+                                    new Date(
+                                        newValue[0]
+                                            ? newValue[0].format('YYYY-MM-DD')
+                                            : ''
+                                    ),
+                                    new Date(
+                                        newValue[1]
+                                            ? newValue[1].format('YYYY-MM-DD')
+                                            : ''
+                                    )
+                                );
+                                const resultArr = result.map((date) => {
+                                    const dateFormat =
+                                        dayjs(date).format('YYYY-MM-DD');
+                                    return fetchTotalStats(dateFormat);
+                                });
+                                Promise.all(resultArr).then((res) =>
+                                    setTotalStats(res)
+                                );
+                            }
+                        }}
+                    />
+                </LocalizationProvider>
+                <CaseSelect />
+            </div>
+            <Chart totalStats={totalStats} />
+        </>
     );
 }
 
