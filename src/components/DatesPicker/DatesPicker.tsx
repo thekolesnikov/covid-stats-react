@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange } from '@mui/x-date-pickers-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -33,6 +34,34 @@ export const DatesPicker = ({ setTotalStats, setIsLoading }: Props) => {
 
     const [params, setParams] = useSearchParams();
 
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.search) {
+            const startDate: any = new URLSearchParams(location.search).get(
+                'dataFrom'
+            );
+            const endDate: any = new URLSearchParams(location.search).get(
+                'dataTo'
+            );
+            setDateRange([dayjs(startDate), dayjs(endDate)]);
+            setIsVisible(false);
+            fetchDates(startDate, endDate);
+        }
+    }, []);
+
+    function fetchDates(startDate: string, endDate: string) {
+        const result = getDatesBetween(new Date(startDate), new Date(endDate));
+        const resultArr = result.map((date) => {
+            const dateFormat = dayjs(date).format('YYYY-MM-DD');
+            return fetchTotalStats(dateFormat, setIsLoading);
+        });
+        Promise.all(resultArr).then((res) => {
+            setIsLoading(false);
+            setTotalStats(res);
+        });
+    }
+
     return (
         <div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -47,30 +76,13 @@ export const DatesPicker = ({ setTotalStats, setIsLoading }: Props) => {
                                 dataFrom: newValue[0]?.format('YYYY-MM-DD'),
                                 dataTo: newValue[1]?.format('YYYY-MM-DD'),
                             });
-                            const result = getDatesBetween(
-                                new Date(
-                                    newValue[0]
-                                        ? newValue[0].format('YYYY-MM-DD')
-                                        : ''
-                                ),
-                                new Date(
-                                    newValue[1]
-                                        ? newValue[1].format('YYYY-MM-DD')
-                                        : ''
-                                )
-                            );
-                            const resultArr = result.map((date) => {
-                                const dateFormat =
-                                    dayjs(date).format('YYYY-MM-DD');
-                                return fetchTotalStats(
-                                    dateFormat,
-                                    setIsLoading
-                                );
-                            });
-                            Promise.all(resultArr).then((res) => {
-                                setIsLoading(false);
-                                setTotalStats(res);
-                            });
+                            const startDate = newValue[0]
+                                ? newValue[0].format('YYYY-MM-DD')
+                                : '';
+                            const endDate = newValue[1]
+                                ? newValue[1].format('YYYY-MM-DD')
+                                : '';
+                            fetchDates(startDate, endDate);
                         }
                     }}
                 />

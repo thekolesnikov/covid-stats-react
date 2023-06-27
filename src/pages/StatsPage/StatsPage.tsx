@@ -21,7 +21,9 @@ function StatsPage() {
                 <BasicSelect filter={filter} setFilter={setFilter} />
             </div>
             {isLoading && <Loader />}
-            <Chart totalStats={totalStats} filter={filter} />
+            {totalStats.length > 0 && (
+                <Chart totalStats={totalStats} filter={filter} />
+            )}
         </>
     );
 }
