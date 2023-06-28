@@ -1,26 +1,17 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useSearchParams, useParams } from 'react-router-dom';
 
 type Props = {
     filter: string;
     setFilter: (filter: string) => void;
 };
 
-export const BasicSelect = ({ filter, setFilter }: Props) => {
-    const [params, setParams] = useSearchParams();
-
+export const CaseSelect = ({ filter, setFilter }: Props) => {
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value as string);
-        // if (params.has('dataFrom') && params.has('dataTo')) {
-        //     setParams({
-        //         case: event.target.value,
-        //     });
-        // }
     };
 
     return (

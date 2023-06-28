@@ -13,3 +13,12 @@ export interface IStatByDate {
         recovered_diff: number;
     };
 }
+
+interface IRegion {
+    iso: string;
+    name: string;
+}
+
+export interface IRegions {
+    data: IRegion[];
+}

@@ -5,16 +5,23 @@ import { DateRange } from '@mui/x-date-pickers-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { fetchTotalStats } from '../../utils/api';
 import { IStatByDate } from '../../types/types';
 
 type Props = {
     setTotalStats: ([]: IStatByDate[]) => void;
     setIsLoading: (isLoading: boolean) => void;
+    region: string;
+    setRegion: (region: string) => void;
 };
 
-export const DatesPicker = ({ setTotalStats, setIsLoading }: Props) => {
+export const DatesPicker = ({
+    setTotalStats,
+    setIsLoading,
+    region,
+    setRegion,
+}: Props) => {
     const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([
         dayjs(''),
         dayjs(''),
@@ -33,28 +40,50 @@ export const DatesPicker = ({ setTotalStats, setIsLoading }: Props) => {
     };
 
     const [params, setParams] = useSearchParams();
-
     const location = useLocation();
 
     useEffect(() => {
         if (location.search) {
             const startDate: any = new URLSearchParams(location.search).get(
-                'dataFrom'
+                'dateFrom'
             );
             const endDate: any = new URLSearchParams(location.search).get(
-                'dataTo'
+                'dateTo'
             );
             setDateRange([dayjs(startDate), dayjs(endDate)]);
             setIsVisible(false);
             fetchDates(startDate, endDate);
         }
+    }, [region]);
+
+    useEffect(() => {
+        if (location.search) {
+            const regionURL: any = new URLSearchParams(location.search).get(
+                'region'
+            );
+            if (regionURL) {
+                setRegion(regionURL);
+            }
+        }
     }, []);
 
     function fetchDates(startDate: string, endDate: string) {
+        if (region === 'all') {
+            setParams({
+                dateFrom: startDate,
+                dateTo: endDate,
+            });
+        } else {
+            setParams({
+                dateFrom: startDate,
+                dateTo: endDate,
+                region: region,
+            });
+        }
         const result = getDatesBetween(new Date(startDate), new Date(endDate));
         const resultArr = result.map((date) => {
             const dateFormat = dayjs(date).format('YYYY-MM-DD');
-            return fetchTotalStats(dateFormat, setIsLoading);
+            return fetchTotalStats(dateFormat, region, setIsLoading);
         });
         Promise.all(resultArr).then((res) => {
             setIsLoading(false);
@@ -72,23 +101,22 @@ export const DatesPicker = ({ setTotalStats, setIsLoading }: Props) => {
                         setDateRange(newValue);
                         setIsVisible(false);
                         if (newValue[0] && newValue[1]) {
-                            setParams({
-                                dataFrom: newValue[0]?.format('YYYY-MM-DD'),
-                                dataTo: newValue[1]?.format('YYYY-MM-DD'),
-                            });
                             const startDate = newValue[0]
                                 ? newValue[0].format('YYYY-MM-DD')
                                 : '';
                             const endDate = newValue[1]
                                 ? newValue[1].format('YYYY-MM-DD')
                                 : '';
+
                             fetchDates(startDate, endDate);
                         }
                     }}
                 />
             </LocalizationProvider>
             {isVisible && (
-                <div className="date_red">Please, choose a date period</div>
+                <div className="date_red">
+                    Please, select a date period before March 9 2023
+                </div>
             )}
         </div>
     );
