@@ -39,14 +39,10 @@ export const Chart = ({ totalStats, filter }: Props) => {
                         Math.min(
                             +`totalStats[0]?.data.${filter}`,
                             +`totalStats[totalStats.length - 1]?.data.${filter}`
-                            // totalStats[0]?.data.confirmed,
-                            // totalStats[totalStats.length - 1]?.data.confirmed
                         ),
                         Math.max(
                             +`totalStats[0]?.data.${filter}`,
                             +`totalStats[totalStats.length - 1]?.data.${filter}`
-                            // totalStats[0]?.data.confirmed,
-                            // totalStats[totalStats.length - 1]?.data.confirmed
                         ),
                     ]}
                 />

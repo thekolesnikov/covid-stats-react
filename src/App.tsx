@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainLayout from './components/MainLayout/MainLayout';
 import StatsPage from './pages/StatsPage/StatsPage';
 import AboutPage from './pages/AboutPage/AboutPage';
-
 import './App.css';
 
 function App() {
