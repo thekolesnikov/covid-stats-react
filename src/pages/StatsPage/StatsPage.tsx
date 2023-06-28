@@ -25,7 +25,7 @@ function StatsPage() {
                 <CaseSelect filter={filter} setFilter={setFilter} />
             </div>
             {isLoading && <Loader />}
-            {totalStats.length > 0 && (
+            {totalStats.length > 0 && !isLoading && (
                 <Chart totalStats={totalStats} filter={filter} />
             )}
         </>
